@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>NIKAH! — Rencana Nikah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Great+Vibes&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --maroon: #6B1F2A;
+        --maroon-deep: #571824;
+        --maroon-soft: #8E2F3E;
+        --gold: #C9A227;
+        --gold-bright: #E5C766;
+        --paper: #FAF5EC;
+        --bg: #F3EBDA;
+        --card: #FFFDF7;
+        --ink: #2E2320;
+        --ink-soft: #6E5D54;
+        --line: #E3D5BC;
+        --track: #EADFC8;
+        --green: #2E7D4F;
+        --amber: #A86E0B;
+        --red: #B03A48;
+        --shadow: 0 10px 28px rgba(87, 24, 36, .14);
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #17100D;
+          --card: #251A16;
+          --ink: #F3E9D7;
+          --ink-soft: #C4AE97;
+          --line: #43322A;
+          --track: #3A2A22;
+          --shadow: 0 10px 28px rgba(0, 0, 0, .45);
+          color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; scroll-padding-bottom: 110px; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Manrope", system-ui, sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      button, input, select { font: inherit; color: inherit; }
+      button { cursor: pointer; }
+      button, [role="button"], select, input:not([type="checkbox"]) { min-height: 2.25rem; }
+
+      .shell {
+        max-width: 480px; margin: 0 auto; height: 100dvh;
+        display: flex; flex-direction: column;
+        box-shadow: 0 0 44px rgba(87, 24, 36, .12);
+      }
+      .app { flex: 1 1 auto; overflow-y: auto; width: 100%; padding: 18px 16px 30px; }
+
+      /* ---------- Hero ---------- */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        background-color: var(--maroon);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%23C9A227' stroke-opacity='0.17' stroke-width='1.4'%3E%3Cellipse cx='42' cy='20' rx='13' ry='19'/%3E%3Cellipse cx='42' cy='64' rx='13' ry='19'/%3E%3Cellipse cx='20' cy='42' rx='19' ry='13'/%3E%3Cellipse cx='64' cy='42' rx='19' ry='13'/%3E%3Ccircle cx='42' cy='42' r='5'/%3E%3C/g%3E%3C/svg%3E");
+        color: var(--paper);
+        border-radius: 22px;
+        padding: 26px 22px 22px;
+        box-shadow: var(--shadow);
+        text-align: center;
+      }
+      .hero .script {
+        font-family: "Great Vibes", cursive;
+        font-size: 30px;
+        color: var(--gold-bright);
+        line-height: 1.1;
+      }
+      .hero h1 {
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        font-size: 40px;
+        letter-spacing: .14em;
+        margin: 2px 0 0;
+        color: var(--paper);
+      }
+      .hero .rule {
+        width: 120px; height: 1px; margin: 12px auto;
+        background: var(--gold); position: relative;
+      }
+      .hero .rule::after {
+        content: ""; position: absolute; left: 50%; top: 50%;
+        width: 7px; height: 7px; background: var(--gold);
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+      .hero .total-label { font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: #EAD9C2; }
+      .hero .total {
+        font-family: "Cinzel", serif; font-weight: 700;
+        font-size: clamp(30px, 9vw, 40px); color: var(--gold-bright);
+        font-variant-numeric: tabular-nums; margin: 2px 0 4px; line-height: 1.15;
+        word-break: break-word;
+      }
+      .hero .meta { font-size: 13.5px; color: #F0E2CB; }
+      .status-pill {
+        display: inline-block; margin-top: 12px; padding: 6px 18px;
+        border-radius: 999px; font-weight: 800; font-size: 14px; letter-spacing: .04em;
+      }
+      .status-cukup { background: var(--gold); color: #3A2A05; }
+      .status-mepet { background: #E8A33D; color: #3A2403; }
+      .status-kurang { background: var(--paper); color: var(--maroon); }
+      .hero .status-note { margin-top: 10px; font-size: 14px; color: #F6ECD9; }
+      .hero .status-note strong { color: var(--gold-bright); }
+
+      /* ---------- Sections & cards ---------- */
+      .panel { display: none; }
+      .panel.active { display: block; animation: panelIn .2s ease both; }
+      @keyframes panelIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+      @media (prefers-reduced-motion: reduce) {
+        .panel.active { animation: none; }
+      }
+      h2.sec {
+        font-family: "Cinzel", serif; font-size: 19px; font-weight: 700;
+        letter-spacing: .06em; margin: 26px 0 4px; color: var(--maroon);
+      }
+      @media (prefers-color-scheme: dark) { h2.sec { color: var(--gold-bright); } }
+      .sec-sub { font-size: 13px; color: var(--ink-soft); margin: 0 0 12px; }
+      .card {
+        background: var(--card); border: 1px solid var(--line);
+        border-radius: 16px; padding: 16px; box-shadow: 0 2px 10px rgba(87,24,36,.05);
+      }
+      .card + .card { margin-top: 12px; }
+
+      /* ---------- Forms ---------- */
+      .field { margin-bottom: 14px; }
+      .field:last-child { margin-bottom: 0; }
+      .field label { display: block; font-weight: 700; font-size: 13.5px; margin-bottom: 6px; }
+      .field input[type="date"], .field .money, .field input[type="text"] {
+        width: 100%; padding: 10px 12px; border: 1.5px solid var(--line);
+        border-radius: 10px; background: var(--paper); color: var(--ink);
+        font-weight: 600; font-variant-numeric: tabular-nums;
+      }
+      @media (prefers-color-scheme: dark) {
+        .field input[type="date"], .field .money, .field input[type="text"] { background: #1D130F; }
+      }
+      .field input:focus { outline: 2px solid var(--gold); outline-offset: 1px; border-color: var(--gold); }
+      .money-wrap { position: relative; }
+      .money-wrap .rp {
+        position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+        font-weight: 800; color: var(--ink-soft); pointer-events: none;
+      }
+      .money-wrap input { padding-left: 40px !important; }
+
+      /* ---------- Presets ---------- */
+      .presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+      .preset {
+        border: 1.5px solid var(--gold); background: transparent; color: var(--ink);
+        border-radius: 12px; padding: 10px 6px; text-align: center; min-height: 56px;
+      }
+      .preset .p-name { font-family: "Cinzel", serif; font-weight: 700; font-size: 14px; letter-spacing: .05em; display: block; }
+      .preset .p-desc { font-size: 11.5px; color: var(--ink-soft); display: block; margin-top: 2px; }
+      .preset:active { background: var(--gold); color: #3A2A05; }
+      .preset:active .p-desc { color: #3A2A05; }
+
+      /* ---------- Cost items ---------- */
+      .item-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+      .item-name { font-weight: 800; font-size: 15px; }
+      .item-note { font-size: 12px; color: var(--ink-soft); margin-top: 1px; }
+      .item.off { opacity: .55; }
+      .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0 10px; }
+      .tier {
+        border: 1.5px solid var(--line); background: transparent; border-radius: 9px;
+        padding: 7px 2px; font-size: 13px; font-weight: 700; min-height: 40px;
+      }
+      .tier.on { background: var(--maroon); border-color: var(--maroon); color: var(--paper); }
+      .item .money-wrap input { font-size: 15px; }
+      .manual-tag { font-size: 11.5px; color: var(--amber); font-weight: 700; margin-top: 5px; display: none; }
+      .manual-tag.show { display: block; }
+
+      /* toggle switch */
+      .switch { position: relative; flex: none; display: inline-block; line-height: 0; }
+      .switch input {
+        -webkit-appearance: none; appearance: none;
+        width: 50px; height: 30px; min-height: 0; border-radius: 999px;
+        background: var(--track); position: relative; cursor: pointer; margin: 0;
+        transition: background .15s;
+      }
+      .switch input::after {
+        content: ""; position: absolute; left: 3px; top: 3px; width: 24px; height: 24px;
+        border-radius: 50%; background: #FFFDF7; box-shadow: 0 1px 4px rgba(0,0,0,.25);
+        transition: transform .15s;
+      }
+      .switch input:checked { background: var(--maroon); }
+      .switch input:checked::after { transform: translateX(20px); }
+      .switch input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+      /* ---------- Summary rows ---------- */
+      .sum-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px dashed var(--line); }
+      .sum-row:last-child { border-bottom: none; }
+      .sum-row .lbl { font-size: 14px; }
+      .sum-row .lbl small { display: block; color: var(--ink-soft); font-size: 12px; }
+      .sum-row .val { font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .sum-row.grand .lbl { font-family: "Cinzel", serif; font-weight: 700; letter-spacing: .04em; }
+      .sum-row.grand .val { color: var(--maroon); font-size: 17px; }
+      @media (prefers-color-scheme: dark) { .sum-row.grand .val { color: var(--gold-bright); } }
+      .assump-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px dashed var(--line); }
+      .assump-row .lbl { font-size: 14px; font-weight: 600; }
+      .assump-row .lbl small { display: block; color: var(--ink-soft); font-size: 12px; font-weight: 400; }
+      .assump-row .val { font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+      /* ---------- Breakdown bars ---------- */
+      .bar-row { margin-bottom: 12px; }
+      .bar-row:last-child { margin-bottom: 0; }
+      .bar-top { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; margin-bottom: 5px; }
+      .bar-top .b-name { font-weight: 700; }
+      .bar-top .b-val { font-variant-numeric: tabular-nums; color: var(--ink-soft); white-space: nowrap; }
+      .bar-top .b-val strong { color: var(--ink); }
+      .bar { height: 9px; border-radius: 99px; background: var(--track); overflow: hidden; }
+      .bar i { display: block; height: 100%; background: var(--gold); border-radius: 99px; transition: width .45s ease; }
+      .stat-line { display: flex; justify-content: space-between; padding-top: 12px; margin-top: 4px; border-top: 1px solid var(--line); font-size: 14px; }
+      .stat-line strong { font-variant-numeric: tabular-nums; }
+
+      /* ---------- Tips ---------- */
+      .tip { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+      .tip:last-child { border-bottom: none; padding-bottom: 2px; }
+      .tip:first-child { padding-top: 2px; }
+      .tip .tip-for { font-family: "Great Vibes", cursive; font-size: 21px; color: var(--maroon); flex: none; min-width: 86px; line-height: 1.2; }
+      @media (prefers-color-scheme: dark) { .tip .tip-for { color: var(--gold-bright); } }
+      .tip p { margin: 0; font-size: 13.5px; }
+      .fineprint { font-size: 12px; color: var(--ink-soft); text-align: center; margin: 18px 4px 0; }
+
+      /* ---------- Nabung ---------- */
+      .big-stat { text-align: center; padding: 8px 0 2px; }
+      .big-stat .bs-label { font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+      .big-stat .bs-value { font-family: "Cinzel", serif; font-weight: 700; font-size: 32px; color: var(--maroon); font-variant-numeric: tabular-nums; line-height: 1.2; }
+      @media (prefers-color-scheme: dark) { .big-stat .bs-value { color: var(--gold-bright); } }
+      .save-progress { height: 12px; border-radius: 99px; background: var(--track); overflow: hidden; margin: 12px 0 6px; }
+      .save-progress i { display: block; height: 100%; background: var(--maroon); border-radius: 99px; transition: width .45s ease; }
+      @media (prefers-color-scheme: dark) { .save-progress i { background: var(--gold); } }
+      .ok-msg {
+        background: var(--maroon); color: var(--paper); border-radius: 14px;
+        padding: 16px; text-align: center; font-weight: 700;
+      }
+      .ok-msg .script { font-family: "Great Vibes", cursive; font-weight: 400; font-size: 26px; color: var(--gold-bright); display: block; }
+
+      /* ---------- Checklist ---------- */
+      .ring-wrap { display: flex; align-items: center; gap: 18px; }
+      .ring { position: relative; width: 96px; height: 96px; flex: none; }
+      .ring svg { transform: rotate(-90deg); }
+      .ring .ring-bg { stroke: var(--track); }
+      .ring .ring-fg { stroke: var(--gold); transition: stroke-dashoffset .5s ease; }
+      .ring .ring-num {
+        position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+        font-family: "Cinzel", serif; font-weight: 700; font-size: 21px;
+      }
+      .ring-text .rt-title { font-family: "Cinzel", serif; font-weight: 700; font-size: 17px; letter-spacing: .04em; }
+      .ring-text p { margin: 3px 0 0; font-size: 13.5px; color: var(--ink-soft); }
+      .phase { font-family: "Cinzel", serif; font-size: 15.5px; font-weight: 700; letter-spacing: .05em; color: var(--maroon); margin: 22px 0 8px; }
+      @media (prefers-color-scheme: dark) { .phase { color: var(--gold-bright); } }
+      .task {
+        display: flex; gap: 12px; align-items: flex-start;
+        background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+        padding: 12px 14px; margin-bottom: 8px; cursor: pointer; min-height: 48px;
+      }
+      .task input[type="checkbox"] { width: 22px; height: 22px; flex: none; margin: 1px 0 0; accent-color: var(--maroon); cursor: pointer; }
+      .task span { font-size: 14.5px; }
+      .task.done span { text-decoration: line-through; color: var(--ink-soft); }
+
+      /* ---------- Hari-H ---------- */
+      .count-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      .count-cell { background: var(--maroon); border-radius: 14px; padding: 14px 4px 10px; text-align: center; color: var(--paper); }
+      .count-cell .n { font-family: "Cinzel", serif; font-weight: 700; font-size: 27px; color: var(--gold-bright); font-variant-numeric: tabular-nums; line-height: 1.1; }
+      .count-cell .u { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #EAD9C2; }
+      .weton-name { font-family: "Great Vibes", cursive; font-size: 36px; color: var(--maroon); text-align: center; line-height: 1.2; }
+      @media (prefers-color-scheme: dark) { .weton-name { color: var(--gold-bright); } }
+      .neptu-row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+      .neptu-chip { border: 1.5px solid var(--gold); border-radius: 999px; padding: 5px 13px; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+      .passed-msg { text-align: center; }
+      .passed-msg .script { font-family: "Great Vibes", cursive; font-size: 32px; color: var(--maroon); display: block; }
+      @media (prefers-color-scheme: dark) { .passed-msg .script { color: var(--gold-bright); } }
+
+      /* ---------- Tab bar ---------- */
+      .tabbar {
+        flex: none; width: 100%;
+        background: var(--maroon); display: grid; grid-template-columns: repeat(4, 1fr);
+        padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+        box-shadow: 0 -6px 22px rgba(87, 24, 36, .3);
+      }
+      .tab {
+        background: none; border: none; color: #D9C6A8; min-height: 52px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+        font-size: 11.5px; font-weight: 700; letter-spacing: .03em; border-radius: 10px;
+      }
+      .tab svg { width: 22px; height: 22px; }
+      .tab.on { color: var(--gold-bright); }
+      .tab.on svg { color: var(--gold-bright); }
+
+      #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 90; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+    <div class="app">
+
+      <!-- ================= RENCANA ================= -->
+      <section class="panel" id="panel-rencana">
+        <div class="hero">
+          <div class="script">Menuju Hari Bahagia</div>
+          <h1>NIKAH!</h1>
+          <div class="rule"></div>
+          <div class="total-label">Perkiraan Total Biaya</div>
+          <div class="total" id="hero-total">Rp 0</div>
+          <div class="meta" id="hero-meta"></div>
+          <div><span class="status-pill" id="hero-status"></span></div>
+          <div class="status-note" id="hero-note"></div>
+        </div>
+
+        <h2 class="sec">Data Acara</h2>
+        <div class="card">
+          <div class="field">
+            <label for="in-date">Tanggal pernikahan</label>
+            <input type="date" id="in-date" />
+          </div>
+          <div class="field">
+            <label for="in-guests">Jumlah tamu undangan</label>
+            <input type="text" inputmode="numeric" id="in-guests" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="in-budget">Total budget</label>
+            <div class="money-wrap"><span class="rp">Rp</span><input type="text" inputmode="numeric" class="money" id="in-budget" autocomplete="off" /></div>
+          </div>
+        </div>
+
+        <div class="presets" role="group" aria-label="Preset cepat">
+          <button type="button" class="preset" data-preset="intimate"><span class="p-name">Intimate</span><span class="p-desc">100 tamu · Hemat</span></button>
+          <button type="button" class="preset" data-preset="standar"><span class="p-name">Standar</span><span class="p-desc">300 tamu · Standar</span></button>
+          <button type="button" class="preset" data-preset="grand"><span class="p-name">Grand</span><span class="p-desc">500 tamu · Mewah</span></button>
+        </div>
+
+        <h2 class="sec">Rincian Biaya</h2>
+        <p class="sec-sub">Pilih kelas tiap pos, atau ketik nominal sendiri. Matikan pos yang tidak dipakai.</p>
+        <div id="items"></div>
+
+        <h2 class="sec">Ringkasan</h2>
+        <div class="card">
+          <div class="sum-row"><span class="lbl">Subtotal pos biaya</span><span class="val" id="sum-subtotal"></span></div>
+          <div class="assump-row">
+            <span class="lbl">Dana cadangan 10%<small>Asumsi — untuk biaya tak terduga</small></span>
+            <span style="display:flex;align-items:center;gap:10px;"><span class="val" id="sum-buffer"></span>
+            <label class="switch"><input type="checkbox" id="in-buffer" /></label></span>
+          </div>
+          <div class="assump-row">
+            <span class="lbl">Inflasi vendor 6% / tahun<small>Asumsi — dihitung pro-rata sampai hari H</small></span>
+            <span style="display:flex;align-items:center;gap:10px;"><span class="val" id="sum-inflasi"></span>
+            <label class="switch"><input type="checkbox" id="in-inflasi" /></label></span>
+          </div>
+          <div class="sum-row grand"><span class="lbl">Total Perkiraan</span><span class="val" id="sum-total"></span></div>
+        </div>
+
+        <h2 class="sec">Komposisi Biaya</h2>
+        <div class="card">
+          <div id="breakdown"></div>
+          <div class="stat-line"><span>Biaya per tamu</span><strong id="stat-perguest"></strong></div>
+        </div>
+
+        <h2 class="sec">Tips Hemat</h2>
+        <p class="sec-sub">Berdasarkan tiga pos termahal di rencanamu saat ini.</p>
+        <div class="card" id="tips"></div>
+
+        <p class="fineprint">Estimasi 2026 — kisaran pasar, cek ke vendor. Harga bisa berbeda jauh antar kota dan vendor.</p>
+      </section>
+
+      <!-- ================= NABUNG ================= -->
+      <section class="panel" id="panel-nabung">
+        <h2 class="sec" style="margin-top:6px;">Rencana Nabung</h2>
+        <p class="sec-sub">Targetmu adalah total perkiraan biaya — sudah termasuk dana cadangan dan inflasi sesuai pengaturan di tab Rencana.</p>
+        <div class="card">
+          <div class="big-stat">
+            <div class="bs-label">Target di Hari H</div>
+            <div class="bs-value" id="save-target"></div>
+          </div>
+          <div class="save-progress"><i id="save-bar"></i></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft);">
+            <span id="save-bar-lbl"></span><span id="save-bar-pct"></span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="field">
+            <label for="in-savings">Tabungan saat ini</label>
+            <div class="money-wrap"><span class="rp">Rp</span><input type="text" inputmode="numeric" class="money" id="in-savings" autocomplete="off" /></div>
+          </div>
+        </div>
+        <div id="save-result"></div>
+      </section>
+
+      <!-- ================= CHECKLIST ================= -->
+      <section class="panel" id="panel-checklist">
+        <h2 class="sec" style="margin-top:6px;">Checklist Persiapan</h2>
+        <p class="sec-sub">Centang yang sudah beres — progres tersimpan otomatis di perangkat ini.</p>
+        <div class="card">
+          <div class="ring-wrap">
+            <div class="ring">
+              <svg width="96" height="96" viewBox="0 0 96 96">
+                <circle class="ring-bg" cx="48" cy="48" r="40" fill="none" stroke-width="9" />
+                <circle class="ring-fg" id="ring-fg" cx="48" cy="48" r="40" fill="none" stroke-width="9" stroke-linecap="round" />
+              </svg>
+              <div class="ring-num" id="ring-num">0%</div>
+            </div>
+            <div class="ring-text">
+              <div class="rt-title">Progres Persiapan</div>
+              <p id="ring-desc"></p>
+            </div>
+          </div>
+        </div>
+        <div id="checklist"></div>
+      </section>
+
+      <!-- ================= HARI-H ================= -->
+      <section class="panel" id="panel-harih">
+        <h2 class="sec" style="margin-top:6px;">Hitung Mundur</h2>
+        <p class="sec-sub" id="cd-date-label"></p>
+        <div id="countdown"></div>
+
+        <h2 class="sec">Weton Hari H</h2>
+        <div class="card">
+          <div class="weton-name" id="weton-name"></div>
+          <div class="neptu-row" id="weton-neptu"></div>
+          <p style="text-align:center;font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Menurut tradisi Primbon Jawa — bukan jaminan. Hari baik adalah hari yang dipersiapkan dengan baik.</p>
+        </div>
+      </section>
+    </div>
+
+    <nav class="tabbar" aria-label="Navigasi utama">
+      <button type="button" class="tab" data-tab="rencana">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.9-9.7-9.2C.7 8.6 2.6 5 6.1 5c2 0 3.4 1.1 4.2 2.3h3.4C14.5 6.1 15.9 5 17.9 5c3.5 0 5.4 3.6 3.8 6.8C19.5 16.1 12 21 12 21Z" opacity="0"/><circle cx="9" cy="14" r="5.2"/><circle cx="15" cy="14" r="5.2"/></svg>
+        Rencana
+      </button>
+      <button type="button" class="tab" data-tab="nabung">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5C4 6.5 7.6 4 12 4s8 2.5 8 5.5c0 .5-.1 1-.3 1.4H4.3C4.1 10.5 4 10 4 9.5Z"/><path d="M4.3 10.9C6.4 13 9 14 12 14s5.6-1 7.7-3.1"/><path d="M12 14v3.2"/><path d="M8.5 20.5h7"/></svg>
+        Nabung
+      </button>
+      <button type="button" class="tab" data-tab="checklist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5h4M4 12h4M4 17.5h4"/><path d="m10.5 6.2 1.6 1.7 3-3.4"/><path d="m10.5 11.7 1.6 1.7 3-3.4"/><path d="m10.5 17.2 1.6 1.7 3-3.4"/></svg>
+        Checklist
+      </button>
+      <button type="button" class="tab" data-tab="harih">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M12 18.2s-2.9-1.9-2.9-3.9c0-1 .8-1.8 1.7-1.8.5 0 1 .3 1.2.7.2-.4.7-.7 1.2-.7.9 0 1.7.8 1.7 1.8 0 2-2.9 3.9-2.9 3.9Z" fill="currentColor" stroke="none"/></svg>
+        Hari-H
+      </button>
+    </nav>
+    </div><!-- /shell -->
+
+    <canvas id="confetti" width="0" height="0"></canvas>
+
+    <script>
+    "use strict";
+
+    /* ================= Data ================= */
+    var TIER_NAMES = ["Hemat", "Standar", "Mewah"];
+    var ITEMS = [
+      { id: "venue",       name: "Venue",               tiers: [3000000, 12000000, 60000000], perPax: false, note: "Gedung / aula / halaman rumah" },
+      { id: "catering",    name: "Catering",            tiers: [50000, 85000, 150000],        perPax: true,  note: "Per tamu, plus 10% porsi cadangan" },
+      { id: "dekorasi",    name: "Dekorasi",            tiers: [4000000, 12000000, 30000000], perPax: false, note: "Pelaminan, meja tamu, bunga" },
+      { id: "dokumentasi", name: "Dokumentasi",         tiers: [2500000, 10000000, 25000000], perPax: false, note: "Foto & video" },
+      { id: "busana",      name: "Busana & MUA",        tiers: [3500000, 10000000, 25000000], perPax: false, note: "Pengantin & keluarga inti" },
+      { id: "undangan",    name: "Undangan & souvenir", tiers: [1500000, 5000000, 12000000],  perPax: false, note: "Cetak / digital & souvenir" },
+      { id: "hiburan",     name: "Hiburan & MC",        tiers: [1500000, 5000000, 15000000],  perPax: false, note: "Musik & pembawa acara" },
+      { id: "admin",       name: "Administrasi & KUA",  tiers: [600000, 1000000, 2000000],    perPax: false, note: "Berkas, penghulu, legalitas" },
+      { id: "mahar",       name: "Mahar & seserahan",   tiers: [3000000, 8000000, 20000000],  perPax: false, note: "Mahar & bingkisan seserahan" },
+      { id: "wo",          name: "Wedding organizer",   tiers: [0, 15000000, 30000000],       perPax: false, note: "Koordinasi hari H oleh WO" }
+    ];
+    var TIPS = {
+      venue: "Gedung di hari kerja / luar peak season bisa 20–30% lebih murah. Aula serbaguna atau halaman rumah juga sah-sah saja.",
+      dekorasi: "Fokus dekor di pelaminan & meja tamu; bunga lokal lebih murah dari impor dan tetap cantik.",
+      dokumentasi: "Fotografer baru naik daun tarifnya lebih bersahabat. Cek portofolionya, lalu booking jauh-jauh hari.",
+      busana: "Sewa lebih hemat dari custom; paket MUA + busana sering lebih murah daripada pesan terpisah.",
+      undangan: "Undangan digital gratis, souvenir fungsional secukupnya — tamu lebih ingat makanannya daripada gantungan kuncinya.",
+      hiburan: "Akustik / keyboard tunggal jauh lebih hemat dari band penuh, suasananya tetap hangat.",
+      admin: "Akad di KUA pada jam kerja gratis. Biaya membengkak biasanya dari berkas tambahan dan perayaan di luar KUA.",
+      mahar: "Seserahan secukupnya — maknanya yang penting, bukan jumlah kotaknya.",
+      wo: "Tanpa WO hemat belasan juta kalau keluarga bisa bantu koordinasi. Kalau tetap pakai, ambil paket hari-H saja."
+    };
+    var PHASES = [
+      { name: "12–9 bulan lagi", tasks: ["Tentukan tanggal & konsep acara", "Sepakati budget bareng pasangan & keluarga", "Booking venue", "Susun daftar tamu awal", "Booking wedding organizer — opsional"] },
+      { name: "6–3 bulan lagi", tasks: ["Booking catering & uji rasa", "Booking dekorasi", "Booking fotografer & videografer", "Booking MUA + fitting busana", "Urus berkas KUA / catatan sipil", "Booking hiburan & MC", "Cetak / sebar undangan digital"] },
+      { name: "1 bulan lagi", tasks: ["Finalisasi jumlah tamu & porsi catering", "Gladi resik & rundown", "Konfirmasi ulang semua vendor", "Siapkan mahar & seserahan", "Siapkan souvenir"] },
+      { name: "1 minggu lagi", tasks: ["Konfirmasi akhir vendor & rundown", "Ambil busana & cek kelengkapan", "Siapkan amplop & buku tamu", "Istirahat cukup, jangan begadang"] },
+      { name: "Hari H", tasks: ["Akad / pemberkatan", "Resepsi & sambut tamu", "Dokumentasi & ucapan terima kasih"] }
+    ];
+    var TOTAL_TASKS = PHASES.reduce(function (n, p) { return n + p.tasks.length; }, 0);
+    var PASARAN = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    var NEPTU_HARI = { 0: 5, 1: 4, 2: 3, 3: 7, 4: 8, 5: 6, 6: 9 }; // Minggu..Sabtu
+    var NEPTU_PASARAN = { Legi: 5, Pahing: 9, Pon: 7, Wage: 4, Kliwon: 8 };
+    var HARI_ID = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    var LS_KEY = "nikah-state-v1";
+
+    /* ================= State ================= */
+    function defaultItems() {
+      var o = {};
+      ITEMS.forEach(function (it) {
+        o[it.id] = { tier: 1, manual: null, enabled: it.id !== "wo" };
+      });
+      return o;
+    }
+    function defaultState() {
+      return {
+        tab: "rencana",
+        date: "2027-06-05",
+        guests: 300,
+        budget: 100000000,
+        savings: 30000000,
+        bufferOn: true,
+        inflationOn: true,
+        items: defaultItems(),
+        checks: {}
+      };
+    }
+    function loadState() {
+      var s = defaultState();
+      try {
+        var raw = localStorage.getItem(LS_KEY);
+        if (!raw) return s;
+        var saved = JSON.parse(raw);
+        if (!saved || typeof saved !== "object") return s;
+        ["tab", "date", "guests", "budget", "savings", "bufferOn", "inflationOn"].forEach(function (k) {
+          if (saved[k] !== undefined) s[k] = saved[k];
+        });
+        if (saved.items) {
+          ITEMS.forEach(function (it) {
+            var si = saved.items[it.id];
+            if (si) {
+              if (typeof si.tier === "number") s.items[it.id].tier = Math.min(2, Math.max(0, si.tier));
+              if (typeof si.manual === "number") s.items[it.id].manual = si.manual;
+              if (typeof si.enabled === "boolean") s.items[it.id].enabled = si.enabled;
+            }
+          });
+        }
+        if (saved.checks && typeof saved.checks === "object") s.checks = saved.checks;
+        if (["rencana", "nabung", "checklist", "harih"].indexOf(s.tab) < 0) s.tab = "rencana";
+        return s;
+      } catch (e) { return s; }
+    }
+    var state = loadState();
+    function save() {
+      try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+    }
+
+    /* ================= Helpers ================= */
+    function $(id) { return document.getElementById(id); }
+    function fmt(n) {
+      n = Math.round(Number(n) || 0);
+      return "Rp " + n.toLocaleString("id-ID");
+    }
+    function fmtPlain(n) { return (Math.round(Number(n) || 0)).toLocaleString("id-ID"); }
+    function parseMoney(str) {
+      var d = String(str).replace(/[^\d]/g, "");
+      return d ? parseInt(d, 10) : 0;
+    }
+    function parseDateLocal(str) {
+      var p = String(str || "").split("-");
+      if (p.length !== 3) return null;
+      var d = new Date(+p[0], +p[1] - 1, +p[2]);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    function fmtDateID(d) {
+      return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    }
+    function daysBetween(a, b) { // whole days from a to b (b - a), date-only
+      var da = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+      var db = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+      return Math.round((db - da) / 86400000);
+    }
+    function monthsBetween(now, target) { // whole calendar months from now to target
+      var m = (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
+      if (target.getDate() < now.getDate()) m -= 1;
+      return m;
+    }
+
+    /* ================= Computation ================= */
+    function itemAmount(it) {
+      var s = state.items[it.id];
+      if (!s.enabled) return 0;
+      if (typeof s.manual === "number") return s.manual;
+      if (it.perPax) return Math.round(state.guests * it.tiers[s.tier] * 1.1);
+      return it.tiers[s.tier];
+    }
+    function compute() {
+      var rows = ITEMS.map(function (it) { return { item: it, amount: itemAmount(it) }; });
+      var subtotal = rows.reduce(function (n, r) { return n + r.amount; }, 0);
+      var buffer = state.bufferOn ? Math.round(subtotal * 0.10) : 0;
+      var inflation = 0;
+      var d = parseDateLocal(state.date);
+      if (state.inflationOn && d) {
+        var days = daysBetween(new Date(), d);
+        if (days > 0) inflation = Math.round(subtotal * 0.06 * (days / 365));
+      }
+      var total = subtotal + buffer + inflation;
+      var status, statusLabel;
+      if (total <= state.budget) { status = "cukup"; statusLabel = "Cukup"; }
+      else if (total <= state.budget * 1.1) { status = "mepet"; statusLabel = "Mepet"; }
+      else { status = "kurang"; statusLabel = "Kurang"; }
+      var biggest = rows.filter(function (r) { return r.amount > 0; })
+        .slice().sort(function (a, b) { return b.amount - a.amount; });
+      return { rows: rows, subtotal: subtotal, buffer: buffer, inflation: inflation,
+               total: total, status: status, statusLabel: statusLabel, biggest: biggest };
+    }
+    function tipFor(row) {
+      if (row.item.id === "catering") {
+        var per10 = Math.round(state.items.catering.manual != null && state.guests > 0
+          ? (state.items.catering.manual / (state.guests * 1.1)) * 10
+          : row.item.tiers[state.items.catering.tier] * 10 * 1.1);
+        return "Tamu adalah biaya terbesar — tiap 10 tamu tambah sekitar " + fmt(per10) + ". Pangkas daftar yang ragu-ragu.";
+      }
+      return TIPS[row.item.id] || "";
+    }
+    function wetonOf(d) {
+      var days = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+      var pasaran = PASARAN[(((3 + days) % 5) + 5) % 5];
+      var neptu = NEPTU_HARI[d.getDay()] + NEPTU_PASARAN[pasaran];
+      return { hari: HARI_ID[d.getDay()], pasaran: pasaran, neptu: neptu,
+               neptuHari: NEPTU_HARI[d.getDay()], neptuPasaran: NEPTU_PASARAN[pasaran] };
+    }
+
+    /* ================= Count-up animation ================= */
+    var displayedTotal = null, totalAnim = null;
+    function animateTotal(to) {
+      var el = $("hero-total");
+      if (displayedTotal === null || displayedTotal === to) { displayedTotal = to; el.textContent = fmt(to); return; }
+      var from = displayedTotal, start = null, dur = 650;
+      if (totalAnim) cancelAnimationFrame(totalAnim);
+      function step(ts) {
+        if (!start) start = ts;
+        var t = Math.min(1, (ts - start) / dur);
+        var eased = 1 - Math.pow(1 - t, 3);
+        var val = Math.round(from + (to - from) * eased);
+        el.textContent = fmt(val);
+        if (t < 1) totalAnim = requestAnimationFrame(step);
+        else { displayedTotal = to; el.textContent = fmt(to); }
+      }
+      totalAnim = requestAnimationFrame(step);
+      displayedTotal = to;
+    }
+
+    /* ================= Confetti ================= */
+    var confettiRunning = false;
+    function confetti() {
+      if (confettiRunning) return;
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var cv = $("confetti"), ctx = cv.getContext("2d");
+      if (!ctx) return;
+      cv.width = window.innerWidth; cv.height = window.innerHeight;
+      var colors = ["#C9A227", "#E5C766", "#6B1F2A", "#8E2F3E", "#FAF5EC"];
+      var parts = [];
+      for (var i = 0; i < 130; i++) {
+        parts.push({
+          x: Math.random() * cv.width, y: -20 - Math.random() * cv.height * 0.35,
+          w: 5 + Math.random() * 6, h: 8 + Math.random() * 8,
+          vy: 2.2 + Math.random() * 3.2, vx: -1.2 + Math.random() * 2.4,
+          rot: Math.random() * Math.PI, vr: -0.12 + Math.random() * 0.24,
+          color: colors[i % colors.length]
+        });
+      }
+      confettiRunning = true;
+      var start = null;
+      function frame(ts) {
+        if (!start) start = ts;
+        ctx.clearRect(0, 0, cv.width, cv.height);
+        var alive = false;
+        parts.forEach(function (p) {
+          p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+          if (p.y < cv.height + 30) alive = true;
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+          ctx.fillStyle = p.color; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+        if (alive && ts - start < 4200) requestAnimationFrame(frame);
+        else { ctx.clearRect(0, 0, cv.width, cv.height); confettiRunning = false; }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    /* ================= Render ================= */
+    var prevStatus = null, prevPct = 0, firstRender = true;
+
+    function renderItems() {
+      var wrap = $("items");
+      wrap.innerHTML = "";
+      ITEMS.forEach(function (it) {
+        var s = state.items[it.id];
+        var card = document.createElement("div");
+        card.className = "card item" + (s.enabled ? "" : " off");
+        var note = it.perPax ? it.note + " · " + fmt(it.tiers[s.tier]) + " / tamu" : it.note;
+        var tiersHtml = TIER_NAMES.map(function (tn, i) {
+          return '<button type="button" class="tier' + (s.tier === i ? " on" : "") + '" data-act="tier" data-id="' + it.id + '" data-tier="' + i + '">' + tn + "</button>";
+        }).join("");
+        card.innerHTML =
+          '<div class="item-head"><div><div class="item-name">' + it.name + '</div><div class="item-note">' + note + '</div></div>' +
+          '<label class="switch"><input type="checkbox" data-act="enable" data-id="' + it.id + '"' + (s.enabled ? " checked" : "") + ' aria-label="Aktifkan ' + it.name + '" /></label></div>' +
+          '<div class="tiers">' + tiersHtml + '</div>' +
+          '<div class="money-wrap"><span class="rp">Rp</span><input type="text" inputmode="numeric" class="money" data-act="amount" data-id="' + it.id + '" value="' + fmtPlain(itemAmount(it)) + '" aria-label="Nominal ' + it.name + '"' + (s.enabled ? "" : " disabled") + ' /></div>' +
+          '<div class="manual-tag' + (typeof s.manual === "number" ? " show" : "") + '">Nominal manual — ganti kelas untuk kembali ke estimasi.</div>';
+        wrap.appendChild(card);
+      });
+    }
+
+    function renderRencana(c) {
+      var d = parseDateLocal(state.date);
+      animateTotal(c.total);
+      $("hero-meta").textContent = (d ? fmtDateID(d) : "Tanggal belum valid") + " · " + fmtPlain(state.guests) + " tamu · Budget " + fmt(state.budget);
+      var pill = $("hero-status");
+      pill.textContent = c.statusLabel;
+      pill.className = "status-pill status-" + c.status;
+      var note = $("hero-note");
+      if (c.status === "cukup") {
+        note.innerHTML = "Masih ada sisa <strong>" + fmt(state.budget - c.total) + "</strong> dari budget. Aman — jangan buru-buru dihabiskan.";
+      } else if (c.status === "mepet") {
+        note.innerHTML = "Lewat <strong>" + fmt(c.total - state.budget) + "</strong> dari budget, tapi masih dalam toleransi 10%. Pangkas satu pos kecil dan kamu aman.";
+      } else {
+        var tip = c.biggest.length ? " Coba turunkan kelas atau nominal <strong>" + c.biggest[0].item.name + "</strong> — itu pos terbesarmu (" + fmt(c.biggest[0].amount) + ")." : "";
+        note.innerHTML = "Kurang <strong>" + fmt(c.total - state.budget) + "</strong> dari budget." + tip;
+      }
+      $("sum-subtotal").textContent = fmt(c.subtotal);
+      $("sum-buffer").textContent = state.bufferOn ? fmt(c.buffer) : "Nonaktif";
+      $("sum-inflasi").textContent = state.inflationOn ? fmt(c.inflation) : "Nonaktif";
+      $("sum-total").textContent = fmt(c.total);
+      $("in-buffer").checked = state.bufferOn;
+      $("in-inflasi").checked = state.inflationOn;
+
+      var bd = $("breakdown");
+      bd.innerHTML = "";
+      var active = c.rows.filter(function (r) { return r.amount > 0; }).sort(function (a, b) { return b.amount - a.amount; });
+      if (!active.length) bd.innerHTML = '<p style="margin:0;color:var(--ink-soft);font-size:13.5px;">Belum ada pos biaya yang aktif.</p>';
+      active.forEach(function (r) {
+        var pct = c.subtotal > 0 ? (r.amount / c.subtotal) * 100 : 0;
+        var row = document.createElement("div");
+        row.className = "bar-row";
+        row.innerHTML = '<div class="bar-top"><span class="b-name">' + r.item.name + '</span><span class="b-val"><strong>' + fmt(r.amount) + '</strong> · ' + pct.toFixed(1).replace(".", ",") + '%</span></div>' +
+          '<div class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></div>';
+        bd.appendChild(row);
+      });
+      $("stat-perguest").textContent = state.guests > 0 ? fmt(c.total / state.guests) : "—";
+
+      var tips = $("tips");
+      tips.innerHTML = "";
+      var top3 = c.biggest.slice(0, 3);
+      if (!top3.length) tips.innerHTML = '<p style="margin:0;color:var(--ink-soft);font-size:13.5px;">Aktifkan pos biaya untuk melihat tips hemat.</p>';
+      top3.forEach(function (r) {
+        var t = document.createElement("div");
+        t.className = "tip";
+        t.innerHTML = '<div class="tip-for">' + r.item.name.split(" &")[0] + '</div><p>' + tipFor(r) + '</p>';
+        tips.appendChild(t);
+      });
+    }
+
+    function renderNabung(c) {
+      var target = c.total;
+      $("save-target").textContent = fmt(target);
+      var pct = target > 0 ? Math.min(100, (state.savings / target) * 100) : 100;
+      $("save-bar").style.width = pct + "%";
+      $("save-bar-lbl").textContent = "Terkumpul " + fmt(state.savings);
+      $("save-bar-pct").textContent = pct.toFixed(0) + "%";
+      var box = $("save-result");
+      var d = parseDateLocal(state.date);
+      var card = document.createElement("div");
+      if (state.savings >= target) {
+        card.className = "ok-msg";
+        card.innerHTML = '<span class="script">Alhamdulillah</span>Tabunganmu sudah cukup untuk target ' + fmt(target) + '. Sisanya bisa jadi dana darurat setelah menikah.';
+      } else if (!d) {
+        card.className = "card";
+        card.innerHTML = '<p style="margin:0;">Tanggal pernikahan belum valid — periksa lagi di tab Rencana.</p>';
+      } else {
+        var now = new Date();
+        var days = daysBetween(now, d);
+        var months = monthsBetween(now, d);
+        var sisa = target - state.savings;
+        if (days < 0) {
+          card.className = "card";
+          card.innerHTML = '<p style="margin:0;">Tanggal pernikahan sudah lewat — target nabung tidak lagi dihitung. Kalau acaranya dimundurkan, ubah tanggalnya di tab Rencana.</p>';
+        } else if (months <= 0) {
+          card.className = "card";
+          card.innerHTML =
+            '<div class="sum-row"><span class="lbl">Sisa yang kurang</span><span class="val">' + fmt(sisa) + '</span></div>' +
+            '<div class="sum-row"><span class="lbl">Waktu tersisa</span><span class="val">' + (days === 0 ? "Hari ini!" : days + " hari lagi") + '</span></div>' +
+            '<p style="margin:10px 0 0;font-size:13.5px;color:var(--ink-soft);">Kurang dari sebulan lagi — sisa ini perlu disiapkan sekarang, bukan dicicil bulanan.</p>';
+        } else {
+          var monthly = Math.ceil(sisa / months);
+          card.className = "card";
+          card.innerHTML =
+            '<div class="big-stat"><div class="bs-label">Nabung per Bulan</div><div class="bs-value">' + fmt(monthly) + '</div></div>' +
+            '<div class="sum-row"><span class="lbl">Sisa yang kurang</span><span class="val">' + fmt(sisa) + '</span></div>' +
+            '<div class="sum-row"><span class="lbl">Bulan tersisa</span><span class="val">' + months + ' bulan</span></div>' +
+            '<div class="sum-row"><span class="lbl">Hari H</span><span class="val">' + fmtDateID(d) + '</span></div>' +
+            '<p style="margin:10px 0 0;font-size:13.5px;color:var(--ink-soft);">Sisihkan di awal bulan, bukan dari sisa akhir bulan. Berdua dengan pasangan, bebannya tinggal ' + fmt(monthly / 2) + ' per orang.</p>';
+        }
+      }
+      box.innerHTML = "";
+      box.appendChild(card);
+    }
+
+    function renderChecklist() {
+      var done = 0;
+      var wrap = $("checklist");
+      wrap.innerHTML = "";
+      PHASES.forEach(function (ph, pi) {
+        var h = document.createElement("div");
+        h.className = "phase";
+        h.textContent = ph.name;
+        wrap.appendChild(h);
+        ph.tasks.forEach(function (task, ti) {
+          var key = pi + "-" + ti;
+          var checked = !!state.checks[key];
+          if (checked) done++;
+          var label = document.createElement("label");
+          label.className = "task" + (checked ? " done" : "");
+          label.innerHTML = '<input type="checkbox" data-check="' + key + '"' + (checked ? " checked" : "") + ' /><span>' + task + '</span>';
+          wrap.appendChild(label);
+        });
+      });
+      var pct = TOTAL_TASKS ? Math.round((done / TOTAL_TASKS) * 100) : 0;
+      var C = 2 * Math.PI * 40;
+      var fg = $("ring-fg");
+      fg.style.strokeDasharray = C;
+      fg.style.strokeDashoffset = C - (C * pct / 100);
+      $("ring-num").textContent = pct + "%";
+      $("ring-desc").textContent = done + " dari " + TOTAL_TASKS + " tugas selesai." +
+        (pct === 100 ? " Semua beres — tinggal menikmati hari bahagia!" : pct >= 50 ? " Sudah lebih dari separuh jalan." : " Pelan-pelan, satu-satu dibereskan.");
+      if (!firstRender && pct === 100 && prevPct < 100) confetti();
+      prevPct = pct;
+    }
+
+    function renderCountdown() {
+      var wrap = $("countdown");
+      var d = parseDateLocal(state.date);
+      if (!d) { wrap.innerHTML = '<div class="card"><p style="margin:0;">Tanggal pernikahan belum valid.</p></div>'; return; }
+      $("cd-date-label").textContent = "Menuju " + fmtDateID(d);
+      var now = new Date();
+      var target = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0);
+      var diff = target.getTime() - now.getTime();
+      if (diff > 0) {
+        var days = Math.floor(diff / 86400000);
+        var hrs = Math.floor(diff % 86400000 / 3600000);
+        var min = Math.floor(diff % 3600000 / 60000);
+        var sec = Math.floor(diff % 60000 / 1000);
+        wrap.innerHTML = '<div class="count-grid">' +
+          cell(days, "Hari") + cell(hrs, "Jam") + cell(min, "Menit") + cell(sec, "Detik") + "</div>";
+      } else {
+        var passed = daysBetween(d, now);
+        wrap.innerHTML = '<div class="card passed-msg">' +
+          (passed <= 0
+            ? '<span class="script">Hari Bahagia Itu Tiba</span><p style="margin:6px 0 0;">Hari ini harinya! Selamat menempuh hidup baru — semoga sakinah, mawaddah, warahmah.</p>'
+            : '<span class="script">Sudah Menikah</span><p style="margin:6px 0 0;">Sudah lewat <strong>' + passed + ' hari</strong> sejak hari bahagia itu. Selamat! Semoga langgeng sampai ke Jannah.</p>') +
+          "</div>";
+      }
+      function cell(n, u) {
+        return '<div class="count-cell"><div class="n">' + n + '</div><div class="u">' + u + "</div></div>";
+      }
+    }
+
+    function renderWeton() {
+      var d = parseDateLocal(state.date);
+      if (!d) { $("weton-name").textContent = "—"; $("weton-neptu").innerHTML = ""; return; }
+      var w = wetonOf(d);
+      $("weton-name").textContent = w.hari + " " + w.pasaran;
+      $("weton-neptu").innerHTML =
+        '<span class="neptu-chip">Neptu hari: ' + w.neptuHari + '</span>' +
+        '<span class="neptu-chip">Neptu pasaran: ' + w.neptuPasaran + '</span>' +
+        '<span class="neptu-chip">Total neptu: ' + w.neptu + '</span>';
+    }
+
+    function render() {
+      var c = compute();
+      document.querySelectorAll(".tab").forEach(function (b) {
+        b.classList.toggle("on", b.getAttribute("data-tab") === state.tab);
+      });
+      document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("active"); });
+      var panel = $("panel-" + state.tab);
+      panel.classList.remove("active");
+      void panel.offsetWidth; // restart tab transition
+      panel.classList.add("active");
+      renderItems();
+      renderRencana(c);
+      renderNabung(c);
+      renderChecklist();
+      renderCountdown();
+      renderWeton();
+      if (!firstRender && prevStatus !== null && prevStatus !== "cukup" && c.status === "cukup") confetti();
+      prevStatus = c.status;
+      firstRender = false;
+    }
+
+    /* ================= Inputs sync ================= */
+    function syncInputs() {
+      $("in-date").value = state.date;
+      $("in-guests").value = fmtPlain(state.guests);
+      $("in-budget").value = fmtPlain(state.budget);
+      $("in-savings").value = fmtPlain(state.savings);
+    }
+
+    /* ================= Events ================= */
+    document.querySelectorAll(".tab").forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.tab = b.getAttribute("data-tab");
+        save(); render();
+      });
+    });
+    document.querySelectorAll(".preset").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var p = b.getAttribute("data-preset");
+        var tier = p === "intimate" ? 0 : p === "grand" ? 2 : 1;
+        state.guests = p === "intimate" ? 100 : p === "grand" ? 500 : 300;
+        ITEMS.forEach(function (it) {
+          state.items[it.id].tier = tier;
+          state.items[it.id].manual = null;
+        });
+        save(); syncInputs(); render();
+      });
+    });
+    $("in-date").addEventListener("change", function () {
+      if (this.value) { state.date = this.value; save(); render(); }
+    });
+    $("in-guests").addEventListener("change", function () {
+      state.guests = Math.max(0, parseMoney(this.value));
+      this.value = fmtPlain(state.guests);
+      save(); render();
+    });
+    $("in-budget").addEventListener("change", function () {
+      state.budget = parseMoney(this.value);
+      this.value = fmtPlain(state.budget);
+      save(); render();
+    });
+    $("in-savings").addEventListener("change", function () {
+      state.savings = parseMoney(this.value);
+      this.value = fmtPlain(state.savings);
+      save(); render();
+    });
+    $("in-buffer").addEventListener("change", function () { state.bufferOn = this.checked; save(); render(); });
+    $("in-inflasi").addEventListener("change", function () { state.inflationOn = this.checked; save(); render(); });
+
+    $("items").addEventListener("click", function (e) {
+      var btn = e.target.closest('[data-act="tier"]');
+      if (!btn) return;
+      var id = btn.getAttribute("data-id");
+      state.items[id].tier = parseInt(btn.getAttribute("data-tier"), 10);
+      state.items[id].manual = null;
+      save(); render();
+    });
+    $("items").addEventListener("change", function (e) {
+      var el = e.target;
+      var act = el.getAttribute("data-act");
+      if (act === "enable") {
+        state.items[el.getAttribute("data-id")].enabled = el.checked;
+        save(); render();
+      } else if (act === "amount") {
+        var id = el.getAttribute("data-id");
+        var it = ITEMS.filter(function (x) { return x.id === id; })[0];
+        var val = parseMoney(el.value);
+        var auto = it.perPax ? Math.round(state.guests * it.tiers[state.items[id].tier] * 1.1) : it.tiers[state.items[id].tier];
+        state.items[id].manual = (val === auto) ? null : val;
+        save(); render();
+      }
+    });
+    $("checklist").addEventListener("change", function (e) {
+      var key = e.target.getAttribute("data-check");
+      if (!key) return;
+      state.checks[key] = e.target.checked;
+      save(); render();
+    });
+
+    /* ================= Init ================= */
+    syncInputs();
+    render();
+    setInterval(function () { if (state.tab === "harih") renderCountdown(); }, 1000);
+    </script>
+  </body>
+</html>
